@@ -6,7 +6,7 @@ class UserManager(BaseUserManager):
         if not phone:
             raise ValueError('Телефон не может быть пустым!')
         user = self. model(phone=phone,
-                           name=name
+                           name=name,
                            **extra_fields)
         user.set_password((password)) # зашифровываем пароль
         user.save()
