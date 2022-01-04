@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from main.models import Category, Post, PostImage
+from main.models import Category, Post, PostImage, Comment
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -15,6 +15,15 @@ class PostListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'user', 'created_at']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all(),
+                                              write_only=True)
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -35,5 +44,5 @@ class PostSerializer(serializers.ModelSerializer):
         images = validated_data.pop('images')
         if images:
             for image in images:
-                PostImage.objects.create(post=instance,image=image)
+                PostImage.objects.create(post=instance, image=image)
         return super().update(instance, validated_data)

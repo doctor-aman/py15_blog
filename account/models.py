@@ -1,14 +1,15 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
+
 class UserManager(BaseUserManager):
     def _create(self, phone, password, name, **extra_fields):
         if not phone:
             raise ValueError('Телефон не может быть пустым!')
-        user = self. model(phone=phone,
-                           name=name,
-                           **extra_fields)
-        user.set_password((password)) # зашифровываем пароль
+        user = self.model(phone=phone,
+                          name=name,
+                          **extra_fields)
+        user.set_password((password))  # зашифровываем пароль
         user.save()
         return user
 
@@ -24,8 +25,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    phone = models.CharField(max_length = 20, primary_key=True)
-    name = models.CharField(max_length = 50)
+    phone = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=50)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     activation_code = models.CharField(max_length=5, blank=True)
@@ -35,7 +36,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     def __str__(self):
-        return  self.phone
+        return self.phone
 
     def has_module_perms(self, app_label):
         return self.is_staff
