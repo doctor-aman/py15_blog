@@ -1,3 +1,46 @@
 from django.shortcuts import render
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
-# Create your views here.
+from main.models import Category, Post
+from main.permissions import IsAuthor
+from main.serializers import CategorySerializer, PostSerializer, PostListSerializer
+
+
+class CategoriesListView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class PostViewSet(ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get_serializer_class(self):
+        serializer_class = super().get_serializer_class()
+        if self.action == 'list':
+            serializer_class = PostListSerializer
+            return serializer_class
+
+    def get_permissions(self):
+        # создавать может пост авторизованный пользователь
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        # изменять и удалять модет только автор поста
+        elif self.action in ['update','partial_update','destroy']:
+            return [IsAuthor()]
+        # просмотр поста доступен всем
+
+
+
+
+
+#TODO:список категорий
+#TODO:CRUD постов
+#TODO:изображение в постах
+#TODO:комменты
+#TODO:подключить Twilio
+#TODO:авторизация
+#TODO:избранное, лайки
+
+
