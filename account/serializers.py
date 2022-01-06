@@ -76,6 +76,7 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Пользователь не активен')
         if not user.check_password(password):
             raise serializers.ValidationError('Неверный пароль')
+        attrs['user'] = user
         return attrs
 
 

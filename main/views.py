@@ -22,7 +22,7 @@ class PostViewSet(ModelViewSet):
         serializer_class = super().get_serializer_class()
         if self.action == 'list':
             serializer_class = PostListSerializer
-            return serializer_class
+        return serializer_class
 
     def get_permissions(self):
         # создавать может пост авторизованный пользователь
@@ -42,10 +42,16 @@ class CommentViewSet(CreateModelMixin,
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
-# TODO:список категорий
-# TODO:CRUD постов
-# TODO:изображение в постах
-# TODO:комменты
-# TODO:подключить Twilio
-# TODO:авторизация
+    def get_permissions(self):
+        # создавать может пост авторизованный пользователь
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        # изменять и удалять может только автор поста
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAuthor()]
+
+
+
+# TODO:фильтрация и поиск
 # TODO:избранное, лайки
+# TODO:Swagger

@@ -3,7 +3,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from account.serializers import RegistrationSerializer, ActivationSerializer
+from account.serializers import RegistrationSerializer, ActivationSerializer, LoginSerializer
 
 
 class RegistrationView(APIView):
@@ -25,7 +25,8 @@ class ActivationView(APIView):
 
 
 class LoginView(ObtainAuthToken):
-    pass
+    serializer_class = LoginSerializer
+
 
 
 class LogoutView(APIView):
