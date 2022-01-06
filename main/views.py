@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
@@ -17,6 +19,10 @@ class CategoriesListView(ListAPIView):
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+# Фильтрация и поиск:
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['title', 'text']
+    filter_fields = ['category', 'tags']
 
     def get_serializer_class(self):
         serializer_class = super().get_serializer_class()
