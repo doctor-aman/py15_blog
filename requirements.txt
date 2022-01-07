@@ -5,3 +5,4 @@ djangorestframework==3.13.1
 django-filter==21.1
 python-decouple==3.5
 twilio==7.4
+drf-yasg

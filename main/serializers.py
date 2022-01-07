@@ -23,6 +23,17 @@ class PostListSerializer(serializers.ModelSerializer):
                 return first_image.image.url  # если image есть вернет URL
         return ''  # если image то вернет пустую строку
 
+    def is_liked(self, post):
+        user = self.context.get('request').user
+        user.liked.filter(post=post).exists()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        user = self.context.get('request').user
+        if user.is_authenticated:
+            representation['is_liked'] = self.is_liked(instance)
+        return representation
+
 
 class CommentSerializer(serializers.ModelSerializer):
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all(),
@@ -68,9 +79,17 @@ class PostSerializer(serializers.ModelSerializer):
                 PostImage.objects.create(post=instance, image=image)
         return super().update(instance, validated_data)
 
+    def is_liked(self, post):
+        user = self.context.get('request').user
+        user.liked.filter(post=post).exists()
+
     def to_representation(self, instance):  # выходные данные сериалайзера
         representation = super().to_representation(instance)
         representation['images'] = PostImageSerializer(instance.pics.all(), many=True).data  # Сериализируем через
                                                                                                 # PostImageSerializer
         representation['comments'] = CommentSerializer(instance.comments.all(), many=True).data
+        user = self.context.get('request').user
+        if user.is_authenticated:
+            representation['is_liked'] = self.is_liked(instance)
+        representation['likes_count'] = instance.favorites.count()
         return representation

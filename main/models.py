@@ -52,3 +52,12 @@ class Comment(models.Model):
                              related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Favorites(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='favorites')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='liked')
+
+    class Meta:
+        unique_together = ['post', 'user']
+

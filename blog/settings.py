@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework.authtoken',
+    'drf_yasg',
 
     'account',
     'main'
@@ -137,6 +138,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-TWILIO_NUMBER = '+12676997707'
-TWILIO_SID = 'ACe127973a1af6c6fe25508354b00973e4'
-TWILIO_AUTH_TOKEN = 'f64ea54d66aab38c3360009a48ca6135'
+TWILIO_NUMBER = config('TWILIO_NUMBER')
+TWILIO_SID = config('TWILIO_SID')
+TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
