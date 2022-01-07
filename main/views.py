@@ -44,7 +44,7 @@ class PostViewSet(ModelViewSet):
 
     @action(['POST'], detail=True)
     def add_to_favorites(self, request, pk=None):
-        post = self.get_objects()
+        post = self.get_object()
         if request.user.liked.filter(post=post).exists():
             return Response('Уже добавлено в избранное')
         Favorites.objects.create(post=post, user=request.user)
